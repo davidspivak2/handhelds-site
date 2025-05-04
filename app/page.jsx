@@ -39,8 +39,8 @@ export default function HandheldsPage() {
   });
 
   return (
-    <div className="p-10 space-y-10 bg-gradient-to-br from-gray-100 to-white min-h-screen font-sans">
-      <h1 className="text-4xl font-bold text-center text-indigo-800">🎮 Handhelds for GeForce NOW</h1>
+    <div className="p-10 space-y-10 bg-zinc-50 min-h-screen font-sans">
+      <h1 className="text-4xl font-bold text-center text-purple-800 mb-6">🎮 Handhelds for GeForce NOW</h1>
 
       <div className="flex flex-wrap gap-6 justify-center">
         {Object.entries(options).map(([key, values]) => (
@@ -50,21 +50,21 @@ export default function HandheldsPage() {
                 const ref = dropdownRefs.current[key];
                 if (ref) ref.classList.toggle("hidden");
               }}
-              className="px-5 py-2 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-100"
+              className="px-5 py-2 bg-white border border-gray-300 rounded-full shadow hover:bg-gray-100 text-sm font-medium"
             >
               Filter {key.charAt(0).toUpperCase() + key.slice(1)}
             </button>
             <div
               ref={(el) => (dropdownRefs.current[key] = el)}
-              className="absolute z-10 mt-2 p-3 w-64 bg-white border border-gray-300 rounded-xl shadow-lg hidden max-h-64 overflow-y-auto"
+              className="absolute z-10 mt-2 p-3 w-72 bg-white border border-gray-300 rounded-xl shadow-lg hidden max-h-64 overflow-y-auto"
             >
               {values.map((val) => (
-                <label key={val} className="block text-sm space-x-2 cursor-pointer text-gray-700 hover:bg-gray-50 px-2 py-1 rounded">
+                <label key={val} className="block text-sm space-x-2 cursor-pointer text-gray-800 hover:bg-gray-100 px-2 py-1 rounded">
                   <input
                     type="checkbox"
                     checked={filters[key].includes(val)}
                     onChange={() => toggleFilter(key, val)}
-                    className="accent-indigo-500"
+                    className="accent-purple-600"
                   />
                   <span>{val}</span>
                 </label>
@@ -74,9 +74,9 @@ export default function HandheldsPage() {
         ))}
       </div>
 
-      <div className="overflow-x-auto rounded-xl shadow-xl border border-gray-200">
-        <table className="min-w-full table-auto text-sm text-left bg-white">
-          <thead className="bg-indigo-100 text-indigo-800">
+      <div className="overflow-x-auto rounded-xl shadow-xl border border-gray-300 bg-white">
+        <table className="min-w-full text-sm text-left">
+          <thead className="bg-purple-100 text-purple-900">
             <tr>
               <th className="p-4 border-b font-semibold">Image</th>
               <th className="p-4 border-b font-semibold">Name</th>
@@ -89,15 +89,15 @@ export default function HandheldsPage() {
               <th className="p-4 border-b font-semibold">Battery</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-200">
             {filtered.map((h, i) => (
-              <tr key={i} className="hover:bg-indigo-50 border-b">
+              <tr key={i} className="hover:bg-purple-50">
                 <td className="p-4">
                   {(h["Image"] || h["Donations welcome"])?.startsWith("http") && (
                     <img
                       src={h["Image"] || h["Donations welcome"]}
                       alt="Device"
-                      className="w-24 h-auto rounded-lg border"
+                      className="w-20 h-auto rounded border border-gray-200"
                     />
                   )}
                 </td>
