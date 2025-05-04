@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import "./style.css";
 
 export default function HandheldsPage() {
   const [handhelds, setHandhelds] = useState([]);
   const [filters, setFilters] = useState({ os: [], brand: [], connectivity: [], resolution: [] });
   const [options, setOptions] = useState({ os: [], brand: [], connectivity: [], resolution: [] });
-  const dropdownRefs = useRef({});
+  const [visibleDropdown, setVisibleDropdown] = useState(null);
 
   useEffect(() => {
     fetch("https://opensheet.vercel.app/1irg60f9qsZOkhp0cwOU7Cy4rJQeyusEUzTNQzhoTYTU/Handhelds")
@@ -33,8 +33,7 @@ export default function HandheldsPage() {
   };
 
   const toggleDropdown = (key) => {
-    const ref = dropdownRefs.current[key];
-    if (ref) ref.classList.toggle("hidden");
+    setVisibleDropdown(visibleDropdown === key ? null : key);
   };
 
   const quickSelectWifi6 = () => {
@@ -66,16 +65,10 @@ export default function HandheldsPage() {
       <div className="filters">
         {Object.entries(options).map(([key, values]) => (
           <div key={key} className="dropdown-wrapper">
-            <button
-              onClick={() => toggleDropdown(key)}
-              className="dropdown-button"
-            >
+            <button onClick={() => toggleDropdown(key)} className="dropdown-button">
               Filter {key.charAt(0).toUpperCase() + key.slice(1)}
             </button>
-            <div
-              ref={(el) => (dropdownRefs.current[key] = el)}
-              className="dropdown hidden"
-            >
+            <div className={`dropdown ${visibleDropdown === key ? "" : "hidden"}`}>
               {values.map((val) => (
                 <label key={val} className="checkbox-label">
                   <input
@@ -110,13 +103,7 @@ export default function HandheldsPage() {
             {filtered.map((h, i) => (
               <tr key={i}>
                 <td>
-                  {Object.values(h)[0]?.includes("<img") ? (
-                    <div dangerouslySetInnerHTML={{ __html: Object.values(h)[0] }} />
-                  ) : Object.values(h)[0]?.startsWith("http") ? (
-                    <img src={Object.values(h)[0]} className="device-img" alt="device" />
-                  ) : (
-                    "No image"
-                  )}
+                  <div dangerouslySetInnerHTML={{ __html: Object.values(h)[0] }} />
                 </td>
                 <td>{h["Handheld\n(Hover for latest updates)"]}</td>
                 <td>{h["Brand"]}</td>
