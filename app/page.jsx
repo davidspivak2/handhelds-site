@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function HandheldsPage() {
   const [handhelds, setHandhelds] = useState([]);
   const [filters, setFilters] = useState({ os: [], brand: [], connectivity: [] });
   const [options, setOptions] = useState({ os: [], brand: [], connectivity: [] });
+  const dropdownRefs = useRef({});
 
   useEffect(() => {
     fetch("https://opensheet.vercel.app/1irg60f9qsZOkhp0cwOU7Cy4rJQeyusEUzTNQzhoTYTU/Handhelds")
@@ -38,20 +39,32 @@ export default function HandheldsPage() {
   });
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold">Handhelds for GeForce NOW</h1>
+    <div className="p-8 space-y-8 bg-gradient-to-br from-gray-100 to-white min-h-screen">
+      <h1 className="text-4xl font-bold text-center text-gray-800">🎮 Handhelds for GeForce NOW</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="flex flex-wrap gap-4 justify-center">
         {Object.entries(options).map(([key, values]) => (
-          <div key={key} className="bg-white shadow rounded-xl p-4 border">
-            <h2 className="font-semibold mb-2 capitalize">{key}</h2>
-            <div className="space-y-1">
+          <div key={key} className="relative">
+            <button
+              onClick={() => {
+                const ref = dropdownRefs.current[key];
+                if (ref) ref.classList.toggle("hidden");
+              }}
+              className="px-5 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100"
+            >
+              Filter {key.charAt(0).toUpperCase() + key.slice(1)}
+            </button>
+            <div
+              ref={(el) => (dropdownRefs.current[key] = el)}
+              className="absolute z-10 mt-2 p-3 w-56 bg-white border border-gray-300 rounded-lg shadow-lg hidden max-h-64 overflow-y-auto"
+            >
               {values.map((val) => (
-                <label key={val} className="flex items-center space-x-2">
+                <label key={val} className="block text-sm space-x-2 cursor-pointer text-gray-700">
                   <input
                     type="checkbox"
                     checked={filters[key].includes(val)}
                     onChange={() => toggleFilter(key, val)}
+                    className="accent-blue-500"
                   />
                   <span>{val}</span>
                 </label>
@@ -61,37 +74,37 @@ export default function HandheldsPage() {
         ))}
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="table-auto w-full border border-gray-300 text-sm">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="border p-2">Image</th>
-              <th className="border p-2">Name</th>
-              <th className="border p-2">Brand</th>
-              <th className="border p-2">OS</th>
-              <th className="border p-2">Released</th>
-              <th className="border p-2">Performance</th>
-              <th className="border p-2">Screen</th>
-              <th className="border p-2">Connectivity</th>
-              <th className="border p-2">Battery</th>
+      <div className="overflow-x-auto shadow-lg rounded-xl">
+        <table className="min-w-full border-collapse bg-white text-sm">
+          <thead className="bg-blue-50 text-gray-800">
+            <tr>
+              <th className="p-3 border-b text-left font-semibold">Image</th>
+              <th className="p-3 border-b text-left font-semibold">Name</th>
+              <th className="p-3 border-b text-left font-semibold">Brand</th>
+              <th className="p-3 border-b text-left font-semibold">OS</th>
+              <th className="p-3 border-b text-left font-semibold">Released</th>
+              <th className="p-3 border-b text-left font-semibold">Performance</th>
+              <th className="p-3 border-b text-left font-semibold">Screen</th>
+              <th className="p-3 border-b text-left font-semibold">Connectivity</th>
+              <th className="p-3 border-b text-left font-semibold">Battery</th>
             </tr>
           </thead>
           <tbody>
             {filtered.map((h, i) => (
-              <tr key={i} className="odd:bg-white even:bg-gray-50">
-                <td className="border p-2">
-                  {h["Donations welcome"]?.startsWith("http") && (
-                    <img src={h["Donations welcome"]} alt="Device" className="w-24 rounded" />
+              <tr key={i} className="hover:bg-blue-50 transition">
+                <td className="p-3 border-b">
+                  {h["Image"]?.startsWith("http") && (
+                    <img src={h["Image"]} alt="Device" className="w-24 h-auto rounded shadow-md" />
                   )}
                 </td>
-                <td className="border p-2 font-medium">{h["Handheld (Hover for latest updates)"]}</td>
-                <td className="border p-2">{h["Brand"]}</td>
-                <td className="border p-2">{h["OS"]}</td>
-                <td className="border p-2">{h["Released"]}</td>
-                <td className="border p-2">{h["Performance Rating\n(Hover for legend)"]}</td>
-                <td className="border p-2">{h["Screen Type"]} — {h["Resolution\n(Best resolutions for retro gaming)"]}</td>
-                <td className="border p-2">{h["Connectivity"]}</td>
-                <td className="border p-2">{h["Battery"]}</td>
+                <td className="p-3 border-b font-medium text-gray-900">{h["Handheld (Hover for latest updates)"]}</td>
+                <td className="p-3 border-b text-gray-700">{h["Brand"]}</td>
+                <td className="p-3 border-b text-gray-700">{h["OS"]}</td>
+                <td className="p-3 border-b text-gray-700">{h["Released"]}</td>
+                <td className="p-3 border-b text-gray-700">{h["Performance Rating\n(Hover for legend)"]}</td>
+                <td className="p-3 border-b text-gray-700">{h["Screen Type"]} — {h["Resolution\n(Best resolutions for retro gaming)"]}</td>
+                <td className="p-3 border-b text-gray-700">{h["Connectivity"]}</td>
+                <td className="p-3 border-b text-gray-700">{h["Battery"]}</td>
               </tr>
             ))}
           </tbody>
