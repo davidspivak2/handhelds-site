@@ -33,9 +33,6 @@ export default function HandheldsPage() {
   };
 
   const toggleDropdown = (key) => {
-    Object.entries(dropdownRefs.current).forEach(([k, ref]) => {
-      if (ref) ref.classList.add("hidden");
-    });
     const ref = dropdownRefs.current[key];
     if (ref) ref.classList.toggle("hidden");
   };
@@ -113,11 +110,15 @@ export default function HandheldsPage() {
             {filtered.map((h, i) => (
               <tr key={i}>
                 <td>
-                  {Object.values(h)[0]?.includes("<img") && (
+                  {Object.values(h)[0]?.includes("<img") ? (
                     <div dangerouslySetInnerHTML={{ __html: Object.values(h)[0] }} />
+                  ) : Object.values(h)[0]?.startsWith("http") ? (
+                    <img src={Object.values(h)[0]} className="device-img" alt="device" />
+                  ) : (
+                    "No image"
                   )}
                 </td>
-                <td>{h["Handheld (Hover for latest updates)"]}</td>
+                <td>{h["Handheld\n(Hover for latest updates)"]}</td>
                 <td>{h["Brand"]}</td>
                 <td>{h["OS"]}</td>
                 <td>{h["Released"]}</td>
