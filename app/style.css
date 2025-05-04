@@ -80,3 +80,22 @@
 .styled-table tr:hover {
   background: #f5f3ff;
 }
+
+.quick-filter {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.quick-filter .dropdown-button {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.quick-filter .dropdown-button:hover {
+  background-color: #bae6fd;
+}
+
