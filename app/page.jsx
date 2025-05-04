@@ -103,7 +103,7 @@ export default function HandheldsPage() {
             {filtered.map((h, i) => (
               <tr key={i}>
                 <td>
-                  <div dangerouslySetInnerHTML={{ __html: Object.values(h)[0] }} />
+                  <div dangerouslySetInnerHTML={{ __html: h["Donations welcome"] }} />
                 </td>
                 <td>{h["Handheld\n(Hover for latest updates)"]}</td>
                 <td>{h["Brand"]}</td>
