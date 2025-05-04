@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export default function HandheldsPage() {
   const [handhelds, setHandhelds] = useState([]);
-  const [filters, setFilters] = useState({ os: "", brand: "", connectivity: "" });
+  const [filters, setFilters] = useState({ os: [], brand: [], connectivity: [] });
   const [options, setOptions] = useState({ os: [], brand: [], connectivity: [] });
 
   useEffect(() => {
@@ -20,36 +20,52 @@ export default function HandheldsPage() {
       });
   }, []);
 
+  const toggleFilter = (key, value) => {
+    setFilters((prev) => {
+      const current = new Set(prev[key]);
+      if (current.has(value)) current.delete(value);
+      else current.add(value);
+      return { ...prev, [key]: Array.from(current) };
+    });
+  };
+
   const filtered = handhelds.filter((h) => {
     return (
-      (!filters.os || h["OS"] === filters.os) &&
-      (!filters.brand || h["Brand"] === filters.brand) &&
-      (!filters.connectivity || h["Connectivity"] === filters.connectivity)
+      (filters.os.length === 0 || filters.os.includes(h["OS"])) &&
+      (filters.brand.length === 0 || filters.brand.includes(h["Brand"])) &&
+      (filters.connectivity.length === 0 || filters.connectivity.includes(h["Connectivity"]))
     );
   });
 
   return (
-    <div className="p-6 space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="p-6 space-y-6">
+      <h1 className="text-3xl font-bold">Handhelds for GeForce NOW</h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {Object.entries(options).map(([key, values]) => (
-          <select
-            key={key}
-            value={filters[key]}
-            onChange={(e) => setFilters((prev) => ({ ...prev, [key]: e.target.value }))}
-            className="border p-2"
-          >
-            <option value="">All {key}</option>
-            {values.map((val) => (
-              <option key={val} value={val}>{val}</option>
-            ))}
-          </select>
+          <div key={key} className="bg-white shadow rounded-xl p-4 border">
+            <h2 className="font-semibold mb-2 capitalize">{key}</h2>
+            <div className="space-y-1">
+              {values.map((val) => (
+                <label key={val} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={filters[key].includes(val)}
+                    onChange={() => toggleFilter(key, val)}
+                  />
+                  <span>{val}</span>
+                </label>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
 
       <div className="overflow-x-auto">
-        <table className="table-auto w-full border border-gray-300 mt-4">
+        <table className="table-auto w-full border border-gray-300 text-sm">
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="bg-gray-100 text-left">
+              <th className="border p-2">Image</th>
               <th className="border p-2">Name</th>
               <th className="border p-2">Brand</th>
               <th className="border p-2">OS</th>
@@ -63,7 +79,12 @@ export default function HandheldsPage() {
           <tbody>
             {filtered.map((h, i) => (
               <tr key={i} className="odd:bg-white even:bg-gray-50">
-                <td className="border p-2">{h["Handheld (Hover for latest updates)"]}</td>
+                <td className="border p-2">
+                  {h["Donations welcome"]?.startsWith("http") && (
+                    <img src={h["Donations welcome"]} alt="Device" className="w-24 rounded" />
+                  )}
+                </td>
+                <td className="border p-2 font-medium">{h["Handheld (Hover for latest updates)"]}</td>
                 <td className="border p-2">{h["Brand"]}</td>
                 <td className="border p-2">{h["OS"]}</td>
                 <td className="border p-2">{h["Released"]}</td>
