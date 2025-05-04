@@ -18,7 +18,7 @@ export default function HandheldsPage() {
           os: [...new Set(data.map((d) => d["OS"]).filter(Boolean))].sort(),
           brand: [...new Set(data.map((d) => d["Brand"]).filter(Boolean))].sort(),
           connectivity: [...new Set(data.map((d) => d["Connectivity"]).filter(Boolean))].sort(),
-          resolution: [...new Set(data.map((d) => d["Resolution\n(Best resolutions for retro gaming)"]).filter(Boolean))].sort(),
+          resolution: [...new Set(data.map((d) => d["Resolution\n(Best resolutions for retro gaming)"]).filter(Boolean))].sort((a, b) => parseInt(a) - parseInt(b)),
         });
       });
   }, []);
@@ -29,6 +29,21 @@ export default function HandheldsPage() {
       if (current.has(value)) current.delete(value);
       else current.add(value);
       return { ...prev, [key]: Array.from(current) };
+    });
+  };
+
+  const toggleDropdown = (key) => {
+    Object.entries(dropdownRefs.current).forEach(([k, ref]) => {
+      if (ref) ref.classList.add("hidden");
+    });
+    const ref = dropdownRefs.current[key];
+    if (ref) ref.classList.toggle("hidden");
+  };
+
+  const quickSelectWifi6 = () => {
+    setFilters((prev) => {
+      const allWifi6 = options.connectivity.filter((val) => val.toLowerCase().includes("wifi 6"));
+      return { ...prev, connectivity: allWifi6 };
     });
   };
 
@@ -45,14 +60,17 @@ export default function HandheldsPage() {
     <div className="wrapper">
       <h1 className="title">🎮 Handhelds for GeForce NOW</h1>
 
+      <div className="quick-filter">
+        <button className="dropdown-button" onClick={quickSelectWifi6}>
+          💨 Quick Filter: WiFi 6
+        </button>
+      </div>
+
       <div className="filters">
         {Object.entries(options).map(([key, values]) => (
           <div key={key} className="dropdown-wrapper">
             <button
-              onClick={() => {
-                const ref = dropdownRefs.current[key];
-                if (ref) ref.classList.toggle("hidden");
-              }}
+              onClick={() => toggleDropdown(key)}
               className="dropdown-button"
             >
               Filter {key.charAt(0).toUpperCase() + key.slice(1)}
