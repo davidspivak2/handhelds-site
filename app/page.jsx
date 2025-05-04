@@ -4,8 +4,8 @@ import { useEffect, useState, useRef } from "react";
 
 export default function HandheldsPage() {
   const [handhelds, setHandhelds] = useState([]);
-  const [filters, setFilters] = useState({ os: [], brand: [], connectivity: [] });
-  const [options, setOptions] = useState({ os: [], brand: [], connectivity: [] });
+  const [filters, setFilters] = useState({ os: [], brand: [], connectivity: [], resolution: [] });
+  const [options, setOptions] = useState({ os: [], brand: [], connectivity: [], resolution: [] });
   const dropdownRefs = useRef({});
 
   useEffect(() => {
@@ -17,6 +17,7 @@ export default function HandheldsPage() {
           os: [...new Set(data.map((d) => d["OS"]).filter(Boolean))].sort(),
           brand: [...new Set(data.map((d) => d["Brand"]).filter(Boolean))].sort(),
           connectivity: [...new Set(data.map((d) => d["Connectivity"]).filter(Boolean))].sort(),
+          resolution: [...new Set(data.map((d) => d["Resolution\n(Best resolutions for retro gaming)"]).filter(Boolean))].sort(),
         });
       });
   }, []);
@@ -34,7 +35,8 @@ export default function HandheldsPage() {
     return (
       (filters.os.length === 0 || filters.os.includes(h["OS"])) &&
       (filters.brand.length === 0 || filters.brand.includes(h["Brand"])) &&
-      (filters.connectivity.length === 0 || filters.connectivity.includes(h["Connectivity"]))
+      (filters.connectivity.length === 0 || filters.connectivity.includes(h["Connectivity"])) &&
+      (filters.resolution.length === 0 || filters.resolution.includes(h["Resolution\n(Best resolutions for retro gaming)"]))
     );
   });
 
